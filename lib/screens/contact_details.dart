@@ -1,4 +1,5 @@
 import 'package:crud/my_contacts.dart';
+import 'package:crud/screens/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -44,10 +45,21 @@ class _ContactDetailsState extends State<ContactDetails> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(child: Image.asset("assets/images/edit.png")),
-              Container(
-                  margin: EdgeInsets.all(20),
-                  child: Image.asset("assets/images/delete.png")),
+              GestureDetector(
+                  onTap: () {
+                    makeCustomTextField();
+                    updateUser();
+                  },
+                  child:
+                      Container(child: Image.asset("assets/images/edit.png"))),
+              GestureDetector(
+                onTap: () {
+                  deleteUser(int.parse(widget.data));
+                },
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    child: Image.asset("assets/images/delete.png")),
+              ),
             ],
           ),
         ],
@@ -88,6 +100,44 @@ class _ContactDetailsState extends State<ContactDetails> {
           },
         )
       ],
+    );
+  }
+
+  updateUser() {
+    setState(() {
+      MyContacts.contacts[int.parse(widget.data)] = "vb";
+      MyContacts.surname[int.parse(widget.data)] = "vb";
+      MyContacts.number[int.parse(widget.data)] = "vb";
+    });
+  }
+
+  makeCustomTextField() {
+    return TextField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'Enter Surname',
+      ),
+    );
+  }
+
+  deleteUser(i) {
+    setState(() {
+      MyContacts.contacts.removeAt(i);
+      MyContacts.surname.removeAt(i);
+      MyContacts.number.removeAt(i);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Contacts()),
+      );
+    });
+    showDialog(
+      // barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Contact has  been Deleted"),
+        );
+      },
     );
   }
 }
